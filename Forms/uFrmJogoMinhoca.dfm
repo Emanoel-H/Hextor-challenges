@@ -3,7 +3,7 @@ object frmJogoMinhoca: TfrmJogoMinhoca
   Top = 0
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'frmJogoMinhoca'
+  Caption = 'Jogo da Minhoca'
   ClientHeight = 442
   ClientWidth = 628
   Color = clBtnFace
