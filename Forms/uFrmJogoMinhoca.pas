@@ -9,7 +9,7 @@ uses
   Vcl.BaseImageCollection, Vcl.ImageCollection;
 
 type
-  TEstadoInput = (eiPausa, eiExercicioDois, eiNenhum, eiProfundidade, eiAvanca, eiCai);
+  TEstadoInput = (eiExercicioDois, eiNenhum, eiProfundidade, eiAvanca, eiCai);
 
   TfrmJogoMinhoca = class(TForm)
     ImageCollection1: TImageCollection;
