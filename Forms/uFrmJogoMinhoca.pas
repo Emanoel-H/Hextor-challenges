@@ -157,7 +157,8 @@ procedure TfrmJogoMinhoca.FormShow(Sender: TObject);
 begin
   mmMinhoca.StyleElements := [];
 
-  bExercicioUm := false;
+  bExercicioUm         := false;
+  mmMinhoca.Font.Color := clBlack;
 
   btnConfirmar.OnClick := btnConfirmarClick;
   mmMinhoca.Lines.Add('===== Aperte ENTER para iniciar =====');
@@ -180,7 +181,7 @@ begin
   begin
     if bExercicioUm then
     begin
-      mmMinhoca.Font.Color := clBlack;
+      mmMinhoca.Color := COR_PADRAO;
       btnConfirmar.Click;
     end
     else
@@ -194,10 +195,8 @@ end;
 
 procedure TfrmJogoMinhoca.MostrarQuadro(const sTitulo: string; cCor: TColor);
 begin
-//  pnMinhoca.Color      := cCor;
-  mmMinhoca.Font.Color := cCor;
-//  mmMinhoca.Color      := cCor;
-  pnMinhoca.Caption    := sTitulo;
+  mmMinhoca.Color   := cCor;
+  pnMinhoca.Caption := sTitulo;
   Application.ProcessMessages;
 
   mmMinhoca.Lines.Add('');
