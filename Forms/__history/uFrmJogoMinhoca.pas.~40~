@@ -1,0 +1,249 @@
+unit uFrmJogoMinhoca;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.ImageList, Vcl.ImgList,
+  Vcl.VirtualImageList, Vcl.ComCtrls, Vcl.ToolWin, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.BaseImageCollection, Vcl.ImageCollection;
+
+type
+  TEstadoInput = (eiPausa, eiExercicioDois, eiNenhum, eiProfundidade, eiAvanca, eiCai);
+
+  TfrmJogoMinhoca = class(TForm)
+    ImageCollection1: TImageCollection;
+    pnMinhoca: TPanel;
+    lblInput: TLabel;
+    mmMinhoca: TMemo;
+    edtInput: TEdit;
+    tbCategorias: TToolBar;
+    btnVoltar: TToolButton;
+    btnConfirmar: TToolButton;
+    VirtualImageList1: TVirtualImageList;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure btnVoltarClick(Sender: TObject);
+    procedure btnConfirmarClick(Sender: TObject);
+    procedure edtInputKeyPress(Sender: TObject; var Key: Char);
+    procedure mmMinhocaKeyPress(Sender: TObject; var Key: Char);
+  private
+    private
+    { Private declarations }
+    FEstado: TEstadoInput;
+    FProfundidade: Integer;
+    FAvanca: Integer;
+    bExercicioUm: boolean;
+  public
+    { Public declarations }
+    function SimularMinhoca(iProfundidade, iAvanca, iCai: Integer): Integer;
+    procedure MostrarQuadro(const sTitulo: string; cCor: TColor);
+    procedure ExercicioUm;
+    procedure HabilitarResposta(bHabilitar: boolean);
+  end;
+
+var
+  frmJogoMinhoca: TfrmJogoMinhoca;
+
+implementation
+
+const
+  COR_PADRAO  = clBtnFace;
+  COR_AMARELO = clYellow;
+  COR_VERDE   = clLime;
+
+{$R *.dfm}
+
+procedure TfrmJogoMinhoca.btnConfirmarClick(Sender: TObject);
+var
+  iValor, iTotalSubidas: Integer;
+begin
+  iValor := StrToIntDef(edtInput.Text, 0);
+  if (iValor <= 0) and (FEstado <> eiExercicioDois) then
+  begin
+    ShowMessage('Informe um número inteiro maior que zero.');
+    Exit;
+  end;
+
+  case FEstado of
+    eiExercicioDois:
+      begin
+        mmMinhoca.Enabled := true;
+        mmMinhoca.Lines.Add('');
+        mmMinhoca.Lines.Add('===== EXERCÍCIO 2 =====');
+
+        FEstado       := eiProfundidade;
+        edtInput.Text := '';
+        mmMinhoca.Lines.Add('Informe a profundidade do buraco (cm) e clique em Confirmar:');
+        HabilitarResposta(True);
+        edtInput.SetFocus;
+      end;
+
+    eiProfundidade:
+      begin
+        FProfundidade := iValor;
+        mmMinhoca.Lines.Add(IntToStr(FProfundidade));
+
+        FEstado       := eiAvanca;
+        edtInput.Text := '';
+        edtInput.SetFocus;
+        mmMinhoca.Lines.Add('Informe quantos cm a minhoca avança por vez e clique em Confirmar:');
+      end;
+
+    eiAvanca:
+      begin
+        FAvanca := iValor;
+        mmMinhoca.Lines.Add(IntToStr(FAvanca));
+
+        FEstado       := eiCai;
+        edtInput.Text := '';
+        edtInput.SetFocus;
+        mmMinhoca.Lines.Add('Informe quantos cm a minhoca cai por vez e clique em Confirmar:');
+      end;
+
+    eiCai:
+      begin
+        mmMinhoca.Lines.Add(IntToStr(iValor));
+        FEstado := eiNenhum;
+        HabilitarResposta(False);
+
+        if FAvanca <= iValor then
+          mmMinhoca.Lines.Add('Atenção: se o avanço não for maior que a queda, a minhoca nunca sai do buraco!')
+        else
+        begin
+          edtInput.Text := '';
+          iTotalSubidas := SimularMinhoca(FProfundidade, FAvanca, iValor);
+          mmMinhoca.Lines.Add(Format('Total de vezes que a minhoca subiu: %d', [iTotalSubidas]));
+        end;
+
+        mmMinhoca.Lines.Add('Fim do programa!');
+        mmMinhoCa.Enabled := true;
+      end;
+  end;
+end;
+
+procedure TfrmJogoMinhoca.btnVoltarClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmJogoMinhoca.edtInputKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    btnConfirmar.Click;
+end;
+
+procedure TfrmJogoMinhoca.ExercicioUm;
+var
+  iTotalSubidas: integer;
+begin
+  mmMinhoca.Lines.Add('===== EXERCÍCIO 1 =====');
+  iTotalSubidas := SimularMinhoca(20, 5, 3);
+
+  mmMinhoca.Lines.Add(Format('Total de vezes que a minhoca subiu: %d', [iTotalSubidas]));
+  FEstado       := eiExercicioDois;
+  bExercicioUm  := true;
+
+end;
+
+procedure TfrmJogoMinhoca.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action         := caFree;
+  frmJogoMinhoca := nil;
+end;
+
+procedure TfrmJogoMinhoca.FormShow(Sender: TObject);
+begin
+  mmMinhoca.StyleElements := [];
+
+  bExercicioUm := false;
+
+  btnConfirmar.OnClick := btnConfirmarClick;
+  mmMinhoca.Lines.Add('===== Aperte ENTER para iniciar =====');
+  mmMinhoca.Lines.Add('');
+  mmMinhoca.SetFocus;
+end;
+
+procedure TfrmJogoMinhoca.HabilitarResposta(bHabilitar: boolean);
+begin
+  edtInput.Enabled     := bHabilitar;
+  btnConfirmar.Enabled := bHabilitar;
+
+  if bHabilitar then
+    edtInput.SetFocus;
+end;
+
+procedure TfrmJogoMinhoca.mmMinhocaKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    if bExercicioUm then
+    begin
+      mmMinhoca.Font.Color :=  COR_PADRAO;
+      btnConfirmar.Click;
+    end
+    else
+    begin
+      mmMinhoca.Clear;
+      ExercicioUm;
+      mmMinhoca.Lines.Add('Seguir para exercício 2? Pressione ENTER');
+    end;
+  end;
+end;
+
+procedure TfrmJogoMinhoca.MostrarQuadro(const sTitulo: string; cCor: TColor);
+begin
+//  pnMinhoca.Color      := cCor;
+  mmMinhoca.Font.Color := cCor;
+//  mmMinhoca.Color      := cCor;
+  pnMinhoca.Caption    := sTitulo;
+  Application.ProcessMessages;
+
+  mmMinhoca.Lines.Add('');
+  mmMinhoca.Lines.Add('>>> ' + sTitulo + ' <<<');
+  mmMinhoca.Lines.Add('');
+end;
+
+function TfrmJogoMinhoca.SimularMinhoca(iProfundidade, iAvanca,
+  iCai: Integer): Integer;
+var
+  iPosicao, iSubidas: Integer;
+  bMostrouMetade: Boolean;
+begin
+  iPosicao := 0;
+  iSubidas := 0;
+  bMostrouMetade := False;
+
+  while iPosicao < iProfundidade do
+  begin
+    iPosicao := iPosicao + iAvanca;
+    Inc(iSubidas);
+    mmMinhoca.Lines.Add(Format('Subida %d: posição = %d cm', [iSubidas, iPosicao]));
+    Application.ProcessMessages;
+
+    if iPosicao >= iProfundidade then
+    begin
+      MostrarQuadro('SAIU DO BURACO!', COR_VERDE);
+      Break;
+    end;
+
+    if (not bMostrouMetade) and (iPosicao >= (iProfundidade / 2)) then
+    begin
+      mmMinhoca.Enabled := true;
+      MostrarQuadro('METADE DO CAMINHO', COR_AMARELO);
+      bMostrouMetade    := True;
+    end;
+
+    iPosicao := iPosicao - iCai;
+    if iPosicao < 0 then
+      iPosicao := 0;
+
+    mmMinhoca.Lines.Add(Format('  -> caiu, posição agora = %d cm (pausando 1s...)', [iPosicao]));
+    Application.ProcessMessages;
+    Sleep(1000);
+  end;
+
+  Result := iSubidas;
+end;
+
+end.

@@ -1,0 +1,17 @@
+program Project1;
+
+uses
+  Vcl.Forms,
+  uFrmJogoMinhoca in 'Forms\uFrmJogoMinhoca.pas' {frmJogoMinhoca},
+  Vcl.Themes,
+  Vcl.Styles;
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Windows11 Dark');
+  Application.CreateForm(TfrmJogoMinhoca, frmJogoMinhoca);
+  Application.Run;
+end.

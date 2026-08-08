@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2026/08/08 15:44:33.001,=C:\Users\henri\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/08/08 15:54:54.755,C:\Users\henri\Desktop\HextorChallenge\Forms\uFrmJogoMinhoca.pas=C:\Users\henri\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/08/08 15:54:54.755,C:\Users\henri\Desktop\HextorChallenge\Forms\uFrmJogoMinhoca.dfm=C:\Users\henri\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2026/08/08 15:56:24.545,C:\Users\henri\Desktop\HextorChallenge\Project1.dproj=C:\Users\henri\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2026/08/08 15:56:35.542,C:\Users\henri\Desktop\HextorChallenge\JogoMinhoca.dproj=C:\Users\henri\Desktop\HextorChallenge\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
